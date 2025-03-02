@@ -159,49 +159,31 @@ pub enum OpCode {
   /// - `R0`: Memory operand
   /// - `R1`: Register operand
   PowRR,
-  /// # Equality Check Memory and Immediate
+  /// # Compare Register and Immediate
+  /// Checks whether two values are equal and stores the result in
+  /// [`REQ`](crate::registers::EQ).
   ///
-  /// Checks whether two values are equal and stores the result in [`VM::EQ`]
-  ///
-  /// Format: `EQ R0 I`
+  /// Format: `Cmp Fl R0 I`
   ///
   /// Arguments:
-  /// - `R0`: Memory operand
+  /// - `Fl`: Flag indicating which comparison operation to perform.
+  /// - `R0`: Register operand
   /// - `I`: Immediate operand
-  EqRI,
-  /// # Greater Than Check Memory and Immediate
+  CmpRI,
+  /// # Compare Register and Register
+  /// Checks whether two values are equal and stores the result in
+  /// [`REQ`](crate::registers::EQ).
   ///
-  /// Checks whether `R0` > `I` and stores the result in [`VM::EQ`]
-  ///
-  /// Format: `EQ R0 I`
-  ///
-  /// Arguments:
-  /// - `R0`: Memory operand
-  /// - `I`: Immediate operand
-  GtRI,
-  /// # Equality Check Register and Register
-  ///
-  /// Checks whether `R0` == `R1` and stores the result in [`VM::EQ`]
-  ///
-  /// Format: `EQ R0 `R1`
+  /// Format: `Cmp Fl R0 R1`
   ///
   /// Arguments:
+  /// - `Fl`: Flag indicating which comparison operation to perform.
   /// - `R0`: Register operand
   /// - `R1`: Register operand
-  EqRR,
-  /// # Greater Than Check Register and Register
-  ///
-  /// Checks whether `R0` > `R1` and stores the result in [`VM::EQ`]
-  ///
-  /// Format: `EQ R0 `R1`
-  ///
-  /// Arguments:
-  /// - `R0`: Register operand
-  /// - `R1`: Register operand
-  GtRR,
+  CmpRR,
   /// # Bitwise Not
   ///
-  /// Format:`NOT R0 R0`
+  /// Format:`NOT Rd R0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
@@ -365,10 +347,8 @@ impl Display for OpCode {
       OpCode::Jz => write!(f, "Jz"),
       OpCode::Jnz => write!(f, "Jnz"),
       OpCode::Jmp => write!(f, "Jmp"),
-      OpCode::EqRI => write!(f, "Eq_RI"),
-      OpCode::GtRI => write!(f, "Gt_RI"),
-      OpCode::EqRR => write!(f, "Eq_RR"),
-      OpCode::GtRR => write!(f, "Gt_RR"),
+      OpCode::CmpRI => write!(f, "Cmp_RI"),
+      OpCode::CmpRR => write!(f, "Cmp_RR"),
       OpCode::Not => write!(f, "Not"),
       OpCode::Copy => write!(f, "Copy"),
       OpCode::MemCpy => write!(f, "MemCpy"),
@@ -382,6 +362,36 @@ impl Display for OpCode {
       OpCode::Pop => write!(f, "Pop"),
       OpCode::PopR => write!(f, "PopR"),
       OpCode::Noop => write!(f, "Noop"),
+    }
+  }
+}
+
+#[derive(FromPrimitive,)]
+pub enum CmpFlag {
+  Eq,
+  Gt,
+  Lt,
+  Geq,
+  Leq,
+}
+
+impl From<u8,> for CmpFlag {
+  fn from(value:u8,) -> Self {
+    match FromPrimitive::from_u8(value,) {
+      Some(op,) => op,
+      None => panic!("{} is not a valid Cmpflag", value),
+    }
+  }
+}
+
+impl Display for CmpFlag {
+  fn fmt(&self, f:&mut std::fmt::Formatter<'_,>,) -> std::fmt::Result {
+    match self {
+      CmpFlag::Eq => write!(f, "EQ"),
+      CmpFlag::Gt => write!(f, "GT"),
+      CmpFlag::Lt => write!(f, "LT"),
+      CmpFlag::Geq => write!(f, "GEQ"),
+      CmpFlag::Leq => write!(f, "LEQ"),
     }
   }
 }

@@ -1,4 +1,4 @@
-use crate::OpCode;
+use crate::{opcodes::CmpFlag, OpCode};
 use eyre::Result;
 use std::{
   fmt::{Debug, Display},
@@ -16,7 +16,6 @@ use std::{
 /// A VM program.
 ///
 /// - `Program` is indexed with [`u32`] so every index into it is `[u8;4]`.
-/// - Relies on [`serde`] for serializing/deserializing.
 pub struct Program {
   inner:Vec<u8,>,
 }
@@ -92,15 +91,17 @@ impl Display for Program {
           let cond = src.next().unwrap();
           output.push(format!("{}, {}, ${}", op, idx, cond),);
         }
-        OpCode::EqRI | OpCode::GtRI => {
+        OpCode::CmpRI => {
+          let fl = CmpFlag::from(src.next().unwrap(),);
           let a = src.next().unwrap();
           let b = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{}, ${}, ${}", op, a, b),);
+          output.push(format!("{}, {}, ${}, ${}", op, fl, a, b),);
         }
-        OpCode::EqRR | OpCode::GtRR => {
+        OpCode::CmpRR => {
+          let fl = CmpFlag::from(src.next().unwrap(),);
           let a = src.next().unwrap();
           let b = src.next().unwrap();
-          output.push(format!("{}, ${}, ${}", op, a, b),);
+          output.push(format!("{}, {}, ${}, ${}", op, fl, a, b),);
         }
         OpCode::Not => {
           let a = src.next().unwrap();
