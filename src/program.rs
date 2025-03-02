@@ -11,7 +11,7 @@ use std::{
 #[derive(Clone,)]
 /// A VM program.
 ///
-/// - `Program` is indexed with [`usize`] so every index into it is `[u8;8]`.
+/// - `Program` is indexed with [`u32`] so every index into it is `[u8;4]`.
 pub struct Program {
   inner:Vec<u8,>,
 }
@@ -24,17 +24,17 @@ impl<const N: usize,> From<&[u8; N],> for Program {
   }
 }
 
-impl Index<usize,> for Program {
+impl Index<u32,> for Program {
   type Output = u8;
 
-  fn index(&self, index:usize,) -> &Self::Output {
-    &self.inner[index]
+  fn index(&self, index:u32,) -> &Self::Output {
+    &self.inner[index as usize]
   }
 }
 
-impl IndexMut<usize,> for Program {
-  fn index_mut(&mut self, index:usize,) -> &mut Self::Output {
-    &mut self.inner[index]
+impl IndexMut<u32,> for Program {
+  fn index_mut(&mut self, index:u32,) -> &mut Self::Output {
+    &mut self.inner[index as usize]
   }
 }
 
