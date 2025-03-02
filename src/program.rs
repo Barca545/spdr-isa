@@ -69,7 +69,7 @@ impl Display for Program {
         | OpCode::MulRI
         | OpCode::DivRI
         | OpCode::PowRI
-        | OpCode::RvSubIR
+        | OpCode::RvSubRI
         | OpCode::RvDivRI
         | OpCode::RvPowRI => {
           let target = src.next().unwrap();

@@ -1,5 +1,8 @@
 /// Number of registers in the [`VM`](https://github.com/Barca545/galaxy).
-pub const REG_NUMBER:u8 = u8::MAX;
+pub const REG_COUNT:usize = u8::MAX as usize;
+
+/// First non-reserved register in the [`VM`](https://github.com/Barca545/galaxy). Registers R3-R12 are reserved for function arguments.
+pub const FIRST_FREE_REGISTER:usize = 12;
 
 /// Program counter. Contains the address of the next
 /// [`OpCode`](crate::opcodes::OpCode) instruction.

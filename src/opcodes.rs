@@ -68,7 +68,7 @@ pub enum OpCode {
   /// - `Rd`: Destination
   /// - `R0`: Register operand
   /// - `I`: Immediate operand
-  RvSubIR,
+  RvSubRI,
   /// # Multiply Register and Immediate
   ///
   /// Format: `MUL Rd R0 I`
@@ -350,7 +350,7 @@ impl Display for OpCode {
       OpCode::Load => write!(f, "Load"),
       OpCode::AddRI => write!(f, "Add_RI"),
       OpCode::SubRI => write!(f, "Sub_RI"),
-      OpCode::RvSubIR => write!(f, "RvDiv_RI"),
+      OpCode::RvSubRI => write!(f, "RvSubRI"),
       OpCode::MulRI => write!(f, "Mul_RI"),
       OpCode::DivRI => write!(f, "Div_RI"),
       OpCode::RvDivRI => write!(f, "RvDiv_RI"),
