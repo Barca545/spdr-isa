@@ -1,8 +1,12 @@
-/// Number of registers in the VM.
+/// Number of registers in the [`VM`](https://github.com/Barca545/galaxy).
 pub const REG_NUMBER:u8 = u8::MAX;
 
-/// Address of the register reserved for the result of an equality check.
-pub const EQ:u8 = 0;
+/// Program counter. Contains the address of the next
+/// [`OpCode`](crate::opcodes::OpCode) instruction.
+pub const PC:usize = 0;
 
-/// Address of the register reserved for storing a loop variable.
-pub const LOOP:u8 = 1;
+/// Stack pointer. Points to the top (last filled) slot on the stack.
+pub const SP:usize = 1;
+
+/// Register which holds the result of the `VM`'s last equality check.
+pub const EQ:usize = 2;
