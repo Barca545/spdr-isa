@@ -29,6 +29,12 @@ impl<const N: usize,> From<&[u8; N],> for Program {
   }
 }
 
+impl From<Vec<u8,>,> for Program {
+  fn from(value:Vec<u8,>,) -> Self {
+    Program { inner:value, }
+  }
+}
+
 impl Index<u32,> for Program {
   type Output = u8;
 
