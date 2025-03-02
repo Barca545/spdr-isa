@@ -147,7 +147,7 @@ impl Display for Program {
           output.push(format!("{} ${} ${} {} ${}", op, rd, r0, i_o, r_o),);
         }
         OpCode::Push => {
-          let a = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
+          let a = src.next().unwrap();
           output.push(format!("{} ${}", op, a),);
         }
         OpCode::Pop => output.push(format!("{}", op),),
