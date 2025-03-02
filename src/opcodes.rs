@@ -375,6 +375,12 @@ pub enum CmpFlag {
   Leq,
 }
 
+impl From<CmpFlag,> for u8 {
+  fn from(value:CmpFlag,) -> Self {
+    value as u8
+  }
+}
+
 impl From<u8,> for CmpFlag {
   fn from(value:u8,) -> Self {
     match FromPrimitive::from_u8(value,) {
