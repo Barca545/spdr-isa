@@ -95,7 +95,7 @@ impl Display for Program {
           let fl = CmpFlag::from(src.next().unwrap(),);
           let a = src.next().unwrap();
           let b = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{}, {}, ${}, ${}", op, fl, a, b),);
+          output.push(format!("{}, {}, ${}, {}", op, fl, a, b),);
         }
         OpCode::CmpRR => {
           let fl = CmpFlag::from(src.next().unwrap(),);
@@ -105,7 +105,8 @@ impl Display for Program {
         }
         OpCode::Not => {
           let a = src.next().unwrap();
-          output.push(format!("{}, ${}", op, a,),);
+          let b = src.next().unwrap();
+          output.push(format!("{}, ${} ${}", op, a, b),);
         }
         OpCode::Call => {
           let a = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
