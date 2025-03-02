@@ -1,17 +1,22 @@
 use crate::OpCode;
+use eyre::Result;
 use std::{
   fmt::{Debug, Display},
+  fs::File,
+  io::{Read, Write},
   mem::transmute,
   ops::{Index, IndexMut},
 };
 
 // Refactor:
 // - Add a thing so a target can only be updated once?
+// - Add better errors to the save/load functions
 
 #[derive(Clone,)]
 /// A VM program.
 ///
 /// - `Program` is indexed with [`u32`] so every index into it is `[u8;4]`.
+/// - Relies on [`serde`] for serializing/deserializing.
 pub struct Program {
   inner:Vec<u8,>,
 }
@@ -180,5 +185,34 @@ impl Program {
 
   pub fn as_mut_slice(&mut self,) -> &mut [u8] {
     self.inner.as_mut_slice()
+  }
+
+  pub fn save(&self, output:&str,) -> Result<(),> {
+    // TODO: Add better errors?
+    let mut file = File::create(output,)?;
+    file.write_all(self.inner.as_slice(),)?;
+    Ok((),)
+  }
+
+  pub fn load(source:&str,) -> Result<Self,> {
+    // TODO: Add better errors?
+    let mut file = File::open(source,)?;
+    let mut inner = Vec::new();
+    file.read_to_end(&mut inner,)?;
+    Ok(Program { inner, },)
+  }
+}
+
+#[cfg(test)]
+mod test {
+  use super::Program;
+
+  #[test]
+  fn ser_de() {
+    let p = Program::from(&[0, 15, 20, 90,],);
+    p.save("test_output.spdr",).unwrap();
+    let new_p = Program::load("test_output.spdr",).unwrap();
+
+    assert_eq!(new_p.inner, p.inner);
   }
 }
