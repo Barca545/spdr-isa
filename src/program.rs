@@ -1,4 +1,4 @@
-use crate::{opcodes::CmpFlag, OpCode};
+use crate::opcodes::{CmpFlag, OpCode};
 use eyre::Result;
 use std::{
   fmt::{Debug, Display},
