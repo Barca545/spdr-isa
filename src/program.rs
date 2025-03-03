@@ -214,8 +214,6 @@ impl Program {
 
 #[cfg(test)]
 mod test {
-  use crate::opcodes::{CmpFlag, OpCode};
-
   use super::Program;
 
   #[test]
@@ -225,12 +223,5 @@ mod test {
     let new_p = Program::load("test_output.spdr",).unwrap();
 
     assert_eq!(new_p.inner, p.inner);
-  }
-  #[test]
-  fn printing() {
-    let p = Program::from(&[OpCode::CmpRI.into(), CmpFlag::Gt.into(), 13, 0, 0, 112, 65,],);
-    // let p = Program::from(&[OpCode::CmpRI.into(), CmpFlag::Gt.into(), 13, 14,],);
-    dbg!(&p);
-    dbg!(p.as_slice());
   }
 }
