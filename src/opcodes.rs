@@ -366,7 +366,7 @@ impl Display for OpCode {
   }
 }
 
-#[derive(FromPrimitive,)]
+#[derive(Debug, FromPrimitive,)]
 pub enum CmpFlag {
   Eq,
   Gt,
