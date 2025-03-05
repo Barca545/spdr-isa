@@ -191,26 +191,26 @@ pub enum OpCode {
   Not,
   /// # Unconditional Jump
   ///
-  /// Format: JMP a
+  /// Format: JMP Idx
   ///
   /// Arguments:
-  /// - `a`: Target index.
+  /// - `Idx`: Destination program index
   Jmp,
   /// # Jump if Zero
   ///
   /// Format: `JZ IDX R0`
   ///
   /// Arguments:
-  /// - `Idx`: Destination program index
   /// - `R0`: Register holding the check
+  /// - `Idx`: Destination program index
   Jz,
   /// # Jump if Not Zero
   ///
   /// Format: `JNZ IDX R0`
   ///
   /// Arguments:
-  /// - `Idx`: Target program index
   /// - `R0`: Register holding the check
+  /// - `Idx`: Target program index
   Jnz,
   /// # Call a Function
   ///

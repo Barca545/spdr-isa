@@ -83,19 +83,18 @@ impl Display for Program {
           output.push(format!("{} ${}, ${} ${}", op, target, a, b),);
         }
         OpCode::Jmp => {
-          let ln = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{}, {}", op, ln),);
+          let idx = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
+          output.push(format!("{}, {}", op, idx as u32),);
         }
         OpCode::Jnz | OpCode::Jz => {
-          let idx = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
           let cond = src.next().unwrap();
-          output.push(format!("{}, {}, ${}", op, idx, cond),);
+          let idx = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
+          output.push(format!("{}, ${}, {}", op, cond, idx as u32),);
         }
         OpCode::CmpRI => {
           let fl = CmpFlag::from(src.next().unwrap(),);
           let a = src.next().unwrap();
           let b = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          // dbg!(b);
           output.push(format!("{}, {}, ${}, {}", op, fl, a, b),);
         }
         OpCode::CmpRR => {
@@ -215,6 +214,21 @@ impl Program {
 #[cfg(test)]
 mod test {
   use super::Program;
+  use crate::{opcodes::OpCode, registers::EQ};
+
+  #[test]
+  fn print_prog() {
+    let p = Program::from(&[
+      OpCode::Jz.into(),
+      EQ as u8,
+      0,
+      0,
+      28,
+      66, // Jump to idx 39 if the comparison fails
+    ],);
+
+    dbg!(p);
+  }
 
   #[test]
   fn ser_de() {
