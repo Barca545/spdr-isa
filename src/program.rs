@@ -5,7 +5,7 @@ use std::{
   fs::File,
   io::{Read, Write},
   mem::transmute,
-  ops::{Index, IndexMut},
+  ops::{Index, IndexMut, Range},
 };
 
 // Refactor:
@@ -179,6 +179,12 @@ impl Program {
     self.inner.push(value,);
   }
 
+  /// Prepends arguments to the "front" (`Program.inner[0]`) of the
+  /// [`Program`]'s inner vector.
+  pub fn push_front(&mut self, args:Vec<u8,>,) {
+    self.inner.splice(Range { start:0, end:0, }, args.into_iter(),);
+  }
+
   pub fn extend_from_slice(&mut self, other:&[u8],) {
     self.inner.extend_from_slice(other,);
   }
@@ -214,24 +220,22 @@ impl Program {
 #[cfg(test)]
 mod test {
   use super::Program;
-  use crate::{opcodes::OpCode, registers::EQ};
 
   #[test]
-  fn print_prog() {
-    let p = Program::from(&[
-      OpCode::Jz.into(),
-      EQ as u8,
-      0,
-      0,
-      28,
-      66, // Jump to idx 39 if the comparison fails
-    ],);
+  fn push_front_program() {
+    let mut program = Program::from(vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0],);
 
-    dbg!(p);
+    program.push_front(vec![1u8, 2, 3, 4, 5],);
+
+    assert_eq!(program.len(), 15);
+    assert_eq!(
+      program.as_slice(),
+      &[1u8, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    );
   }
 
   #[test]
-  fn ser_de() {
+  fn serilize_deserialize_program() {
     let p = Program::from(&[0, 15, 20, 90,],);
     p.save("test_output.spdr",).unwrap();
     let new_p = Program::load("test_output.spdr",).unwrap();

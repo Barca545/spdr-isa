@@ -4,10 +4,10 @@ use std::fmt::Display;
 
 // Refactor:
 // - Should MemCpy also take offsets?
+// - How do I make the documentation about the Immediate size show up
 
 #[derive(FromPrimitive, ToPrimitive, Debug,)]
-// No need for immediate-immediate comparison or arithmetic as those should
-// always be optimized in place
+/// Unless otherwise stated all immediate arguments are 4 bytes.
 pub enum OpCode {
   /// # Halt program execution
   Hlt,
@@ -233,10 +233,10 @@ pub enum OpCode {
   /// Pop the return address of the top of the stack and set the PC equal to it.
   /// Pop the function's arguments from the stack.
   ///
-  /// Format: `RET I`
+  /// Format: `RET I0`
   ///
   /// Arguments:
-  /// - `I`: The number of function arguments to clean up.
+  /// - `I0`: The number of function arguments to clean up.
   Ret,
   /// # Allocate Heap
   ///

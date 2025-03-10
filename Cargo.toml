@@ -1,5 +1,5 @@
 [package]
-name = "spdr_isa"
+name = "spdr-isa"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 num-traits = "0.2"
-num-derive = "0.3"
+num-derive = "0.4.2"
 eyre = "0.6.12"
