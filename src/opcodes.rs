@@ -198,7 +198,7 @@ pub enum OpCode {
   Jmp,
   /// # Jump if Zero
   ///
-  /// Format: `JZ IDX R0`
+  /// Format: `JZ R0 IDX`
   ///
   /// Arguments:
   /// - `R0`: Register holding the check
@@ -206,7 +206,7 @@ pub enum OpCode {
   Jz,
   /// # Jump if Not Zero
   ///
-  /// Format: `JNZ IDX R0`
+  /// Format: `JNZ R0 IDX`
   ///
   /// Arguments:
   /// - `R0`: Register holding the check
