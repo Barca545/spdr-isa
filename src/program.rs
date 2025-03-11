@@ -83,13 +83,13 @@ impl Display for Program {
           output.push(format!("{} ${}, ${} ${}", op, target, a, b),);
         }
         OpCode::Jmp => {
-          let idx = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{}, {}", op, idx as u32),);
+          let idx = unsafe { transmute::<[u8; 4], u32,>(src.next_chunk::<4>().unwrap(),) };
+          output.push(format!("{}, {}", op, idx),);
         }
         OpCode::Jnz | OpCode::Jz => {
           let cond = src.next().unwrap();
-          let idx = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{}, ${}, {}", op, cond, idx as u32),);
+          let idx = unsafe { transmute::<[u8; 4], u32,>(src.next_chunk::<4>().unwrap(),) };
+          output.push(format!("{}, ${}, {}", op, cond, idx),);
         }
         OpCode::CmpRI => {
           let fl = CmpFlag::from(src.next().unwrap(),);
@@ -108,10 +108,6 @@ impl Display for Program {
           let b = src.next().unwrap();
           output.push(format!("{}, ${} ${}", op, a, b),);
         }
-        OpCode::Call => {
-          let a = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          output.push(format!("{} {}", op, a),);
-        }
         OpCode::Copy => output.push(format!(
           "{} ${} ${}",
           op,
@@ -122,6 +118,10 @@ impl Display for Program {
           let rd = src.next().unwrap();
           let r0 = src.next().unwrap();
           output.push(format!("{} ${} ${}", op, rd, r0,),);
+        }
+        OpCode::Call => {
+          let a = unsafe { transmute::<[u8; 4], u32,>(src.next_chunk::<4>().unwrap(),) };
+          output.push(format!("{} {}", op, a),);
         }
         OpCode::SysCall => output.push(format!("{} {}", op, src.next().unwrap()),),
         OpCode::Ret => {
@@ -134,14 +134,7 @@ impl Display for Program {
           output.push(format!("{} ${} ${}", op, dst, r0),);
         }
         OpCode::Dealloc => output.push(format!("{}", op),),
-        OpCode::RMem => {
-          let rd = src.next().unwrap();
-          let r0 = src.next().unwrap();
-          let i_o = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
-          let r_o = src.next().unwrap();
-          output.push(format!("{} ${} ${} {} ${}", op, rd, r0, i_o, r_o),);
-        }
-        OpCode::WMem => {
+        OpCode::RMem | OpCode::WMem => {
           let rd = src.next().unwrap();
           let r0 = src.next().unwrap();
           let i_o = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };

@@ -194,7 +194,7 @@ pub enum OpCode {
   /// Format: JMP Idx
   ///
   /// Arguments:
-  /// - `Idx`: Destination program index
+  /// - `Idx`: Destination program index as a `u32`
   Jmp,
   /// # Jump if Zero
   ///
@@ -202,7 +202,7 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `R0`: Register holding the check
-  /// - `Idx`: Destination program index
+  /// - `Idx`: Destination program index as a `u32`
   Jz,
   /// # Jump if Not Zero
   ///
@@ -210,44 +210,44 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `R0`: Register holding the check
-  /// - `Idx`: Target program index
+  /// - `Idx`: Destination program index as a `u32`
   Jnz,
   /// # Call a Function
   ///
   /// Format: `CALL IDX`
   ///
   /// Arguments:
-  /// - `IDX`: Location of the function pointer.
+  /// - `IDX`: Location of the function pointer as a `u32`
   Call,
   /// # System call
   ///
-  /// Call an external function.
+  /// Call an external function
   ///
   /// Format: `SYSCALL I0`
   ///
   /// Arguments:
-  /// - `I0`: Index of the external function being called.
+  /// - `I0`: Index of the external function being called as a `u32`
   SysCall,
   /// # Return from a function call
   ///
-  /// Pop the return address of the top of the stack and set the PC equal to it.
-  /// Pop the function's arguments from the stack.
+  /// Pop the return address of the top of the stack and set the PC equal to it
+  /// Pop the function's arguments from the stack
   ///
   /// Format: `RET I0`
   ///
   /// Arguments:
-  /// - `I0`: The number of function arguments to clean up.
+  /// - `I0`: The number of function arguments to clean up
   Ret,
   /// # Allocate Heap
   ///
-  /// Allocates a chunk of memory capable of holding `R0` values. Returns a
-  /// pointer to the allocation to `Rd`.
+  /// Allocates a chunk of memory capable of holding `R0` values  Returns a
+  /// pointer to the allocation to `Rd`
   ///
   /// Format: `ALLOC Rd R0`
   ///
   /// Arguments:
-  /// - `Rd`: Register storing the destination.
-  /// - `R0`: Register storing the number of values to be stored.
+  /// - `Rd`: Register storing the destination
+  /// - `R0`: Register storing the number of values to be stored
   Alloc,
   /// # Deallocate Heap
   ///
@@ -255,7 +255,7 @@ pub enum OpCode {
   Dealloc,
   /// # Read Memory
   ///
-  /// Loads the value stored at the pointer in `R0 + I + R1` into `Rd`.
+  /// Loads the value stored at the pointer in `R0 + I + R1` into `Rd`
   ///
   /// Format:`RMEM Rd R0 I R1`
   ///
@@ -286,25 +286,25 @@ pub enum OpCode {
   WMem,
   /// # Push to Stack
   ///
-  /// Pushes the argument onto the top of stack.
+  /// Pushes the argument onto the top of stack
   ///
   /// Format: `PUSH R0`
   ///
   /// Arguments:
-  /// - `R0`: Register holding the value to push.
+  /// - `R0`: Register holding the value to push
   Push,
   /// # Pop From Stack
   ///
-  /// Removes the item on the top of the stack.
+  /// Removes the item on the top of the stack
   Pop,
   /// # Pop Read From Stack
   ///
-  /// Removes the item on the top of the stack and places it into a register.
+  /// Removes the item on the top of the stack and places it into a register
   ///
   /// Format: `POPR R0`
   ///
   /// Arguments:
-  /// `R0`: The register to place the popped value.
+  /// `R0`: The register to place the popped value
   PopR,
   /// # No Operation
   Noop,
