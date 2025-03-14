@@ -28,6 +28,14 @@ impl<const N: usize,> From<&[u8; N],> for Program {
   }
 }
 
+impl From<&[u8],> for Program {
+  fn from(value:&[u8],) -> Self {
+    Program {
+      inner:Vec::from(value,),
+    }
+  }
+}
+
 impl From<Vec<u8,>,> for Program {
   fn from(value:Vec<u8,>,) -> Self {
     Program { inner:value, }
@@ -128,7 +136,7 @@ impl Display for Program {
           let a = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
           output.push(format!("{} {}", op, a),)
         }
-        OpCode::Alloc => {
+        OpCode::Alloc | OpCode::Realloc => {
           let dst = src.next().unwrap();
           let r0 = src.next().unwrap();
           output.push(format!("{} ${} ${}", op, dst, r0),);

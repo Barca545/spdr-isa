@@ -13,13 +13,13 @@ pub enum OpCode {
   Hlt,
   /// # Load Data
   ///
-  /// Load the immediate `I` into register `R0`.
+  /// Load the immediate `I0` into register `R0`.
   ///
-  /// Format: `LOAD Rd I`
+  /// Format: `LOAD Rd I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination register
-  /// - `I`: Source immediate
+  /// - `I0`: Source immediate
   Load,
   /// # Copy Memory
   ///
@@ -44,75 +44,75 @@ pub enum OpCode {
   MemCpy,
   /// # Add Register and Immediate
   ///
-  /// Format: `ADD Rd R0 I`
+  /// Format: `ADD Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   AddRI,
   /// # Subtract Immediate from Register  
   ///
-  /// Format: `SUB Rd R0 I`
+  /// Format: `SUB Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   SubRI,
   /// # Subtract Register from Immediate
   ///
-  /// Format: `RVSUB Rd R0 I`
+  /// Format: `RVSUB Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   RvSubRI,
   /// # Multiply Register and Immediate
   ///
-  /// Format: `MUL Rd R0 I`
+  /// Format: `MUL Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   MulRI,
   /// # Divide Register by Immediate
   ///
-  /// Format: `DIV Rd R0 I`
+  /// Format: `DIV Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   DivRI,
   /// # Divide Immediate by Register
   ///
-  /// Format: `RVDIV Rd R0 I`
+  /// Format: `RVDIV Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   RvDivRI,
   /// # Raise Register by Immediate
   ///
-  /// Format: `POW Rd R0 I`
+  /// Format: `POW Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   PowRI,
   /// # Raise Immediate by Register
   ///
-  /// Format: `RVPOW Rd R0 I`
+  /// Format: `RVPOW Rd R0 I0`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   RvPowRI,
   /// # Add Register and Register
   ///
@@ -163,12 +163,12 @@ pub enum OpCode {
   /// Checks whether two values are equal and stores the result in
   /// [`REQ`](crate::registers::EQ).
   ///
-  /// Format: `Cmp Fl R0 I`
+  /// Format: `Cmp Fl R0 I0`
   ///
   /// Arguments:
   /// - `Fl`: Flag indicating which comparison operation to perform.
   /// - `R0`: Register operand
-  /// - `I`: Immediate operand
+  /// - `I0`: Immediate operand
   CmpRI,
   /// # Compare Register and Register
   /// Checks whether two values are equal and stores the result in
@@ -221,7 +221,7 @@ pub enum OpCode {
   Call,
   /// # System call
   ///
-  /// Call an external function
+  /// Call an external function.
   ///
   /// Format: `SYSCALL I0`
   ///
@@ -230,18 +230,18 @@ pub enum OpCode {
   SysCall,
   /// # Return from a function call
   ///
-  /// Pop the return address of the top of the stack and set the PC equal to it
-  /// Pop the function's arguments from the stack
+  /// Pop the return address of the top of the stack and set the PC equal to it.
+  /// Pop the function's arguments from the stack.
   ///
   /// Format: `RET I0`
   ///
   /// Arguments:
   /// - `I0`: The number of function arguments to clean up
   Ret,
-  /// # Allocate Heap
+  /// # Allocate Memory
   ///
-  /// Allocates a chunk of memory capable of holding `R0` values  Returns a
-  /// pointer to the allocation to `Rd`
+  /// Allocates a slab of memory capable of holding `R0` values. Returns a
+  /// pointer to the allocation to `Rd`.
   ///
   /// Format: `ALLOC Rd R0`
   ///
@@ -249,20 +249,36 @@ pub enum OpCode {
   /// - `Rd`: Register storing the destination
   /// - `R0`: Register storing the number of values to be stored
   Alloc,
-  /// # Deallocate Heap
+  /// # Reallocate Memory
   ///
-  /// CURRENTLY A NOOP
+  /// Reallocates a slab of memory.
+  ///
+  /// Format: `ALLOC Rd R0`
+  ///
+  /// Arguments:
+  /// - `Rd`: Register storing the previous allocation
+  /// - `R0`: Register storing the number of values to be stored
+  Realloc,
+  /// # Deallocate Memory
+  ///
+  /// Deallocates a slab of memory.
+  ///
+  /// Format: `ALLOC Rd R0`
+  ///
+  /// Arguments:
+  /// - `Rd`: Register storing the destination
+  /// - `R0`: Register storing the number of values to be stored
   Dealloc,
   /// # Read Memory
   ///
-  /// Loads the value stored at the pointer in `R0 + I + R1` into `Rd`
+  /// Loads the value stored at the pointer in `R0 + I0 + R1` into `Rd`.
   ///
-  /// Format:`RMEM Rd R0 I R1`
+  /// Format:`RMEM Rd R0 I0 R1`
   ///
   /// Arguments:
   /// - `Rd`: Destination
   /// - `R0`: Memory storing the pointer to the source memory
-  /// - `I`: Offset stored as an immediate
+  /// - `I0`: Offset stored as an immediate
   /// - `R1`: Offset stored in a register
   ///
   /// Note: If there is no register offset, R2 will be zero and ignored. Zero
@@ -270,15 +286,15 @@ pub enum OpCode {
   RMem,
   /// # Write Memory
   ///
-  /// Writes the value stored in `R0 + I + R1` into the memory address stored in
-  /// `Rd`.
+  /// Writes the value stored in `R0 + I0 + R1` into the memory address stored
+  /// in `Rd`.
   ///
-  /// Format:`RMEM Rd R0 I R1`
+  /// Format:`RMEM Rd R0 I0 R1`
   ///
   /// Arguments:
   /// - `Rd`: Register storing the destination memory address
   /// - `R0`: Register storing the data to write to memory
-  /// - `I`: Offset stored as an immediate
+  /// - `I0`: Offset stored as an immediate
   /// - `R1`: Offset stored in a register
   ///
   /// Note: If there is no register offset, R2 will be zero and ignored. Zero
@@ -286,7 +302,7 @@ pub enum OpCode {
   WMem,
   /// # Push to Stack
   ///
-  /// Pushes the argument onto the top of stack
+  /// Pushes the argument onto the top of stack.
   ///
   /// Format: `PUSH R0`
   ///
@@ -295,11 +311,13 @@ pub enum OpCode {
   Push,
   /// # Pop From Stack
   ///
-  /// Removes the item on the top of the stack
+  /// Format: Takes no args
+  ///
+  /// Removes the item on the top of the stack.
   Pop,
   /// # Pop Read From Stack
   ///
-  /// Removes the item on the top of the stack and places it into a register
+  /// Removes the item on the top of the stack and places it into a register.
   ///
   /// Format: `POPR R0`
   ///
@@ -355,6 +373,7 @@ impl Display for OpCode {
       OpCode::SysCall => write!(f, "SysCall"),
       OpCode::Ret => write!(f, "Ret"),
       OpCode::Alloc => write!(f, "Alloc"),
+      OpCode::Realloc => write!(f, "Realloc"),
       OpCode::Dealloc => write!(f, "Dealloc"),
       OpCode::RMem => write!(f, "RMem"),
       OpCode::WMem => write!(f, "WMem"),
