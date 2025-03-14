@@ -28,6 +28,14 @@ impl<const N: usize,> From<&[u8; N],> for Program {
   }
 }
 
+impl<const N: usize,> From<[u8; N],> for Program {
+  fn from(value:[u8; N],) -> Self {
+    Program {
+      inner:Vec::from(value,),
+    }
+  }
+}
+
 impl From<&[u8],> for Program {
   fn from(value:&[u8],) -> Self {
     Program {

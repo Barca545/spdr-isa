@@ -277,7 +277,7 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `Rd`: Destination
-  /// - `R0`: Memory storing the pointer to the source memory
+  /// - `R0`: Register storing the source memory address
   /// - `I0`: Offset stored as an immediate
   /// - `R1`: Offset stored in a register
   ///
