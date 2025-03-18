@@ -217,7 +217,7 @@ pub enum OpCode {
   /// Format: `CALL IDX`
   ///
   /// Arguments:
-  /// - `IDX`: Location of the function pointer as a `u32`
+  /// - `IDX`: Location of the function pointer as a `u8`
   Call,
   /// # System call
   ///
@@ -226,7 +226,7 @@ pub enum OpCode {
   /// Format: `SYSCALL I0`
   ///
   /// Arguments:
-  /// - `I0`: Index of the external function being called as a `u32`
+  /// - `I0`: Index of the external function being called as a `u8`
   SysCall,
   /// # Return from a function call
   ///
@@ -236,7 +236,9 @@ pub enum OpCode {
   /// Format: `RET I0`
   ///
   /// Arguments:
-  /// - `I0`: The number of function arguments to clean up
+  /// - `I0`: The number of function arguments to clean up as a u8
+  // Ret takes a u8 because the stack is only 20 cells long so it will never fill up even a u8 let alone a
+  // u32
   Ret,
   /// # Allocate Memory
   ///
@@ -247,27 +249,26 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `Rd`: Register storing the destination
-  /// - `R0`: Register storing the number of values to be stored
+  /// - `R0`: Register storing the number of values to store
   Alloc,
   /// # Reallocate Memory
   ///
   /// Reallocates a slab of memory.
   ///
-  /// Format: `ALLOC Rd R0`
+  /// Format: `REALLOC Rd R0`
   ///
   /// Arguments:
   /// - `Rd`: Register storing the previous allocation
-  /// - `R0`: Register storing the number of values to be stored
+  /// - `R0`: Register storing the number of values to store
   Realloc,
   /// # Deallocate Memory
   ///
   /// Deallocates a slab of memory.
   ///
-  /// Format: `ALLOC Rd R0`
+  /// Format: `DEALLOC R0`
   ///
   /// Arguments:
-  /// - `Rd`: Register storing the destination
-  /// - `R0`: Register storing the number of values to be stored
+  /// - `R0`: Register storing the slab to deallocate.
   Dealloc,
   /// # Read Memory
   ///
@@ -297,8 +298,8 @@ pub enum OpCode {
   /// - `I0`: Offset stored as an immediate
   /// - `R1`: Offset stored in a register
   ///
-  /// Note: If there is no register offset, R2 will be zero and ignored. Zero
-  /// (REQ) is used because it will never store an offset.
+  /// Note: If there is no register offset, R1 will be zero and ignored. R1 == 0
+  /// (the PC register) is used because it will never store an offset.
   WMem,
   /// # Push to Stack
   ///
@@ -350,7 +351,7 @@ impl Display for OpCode {
       OpCode::Load => write!(f, "Load"),
       OpCode::AddRI => write!(f, "Add_RI"),
       OpCode::SubRI => write!(f, "Sub_RI"),
-      OpCode::RvSubRI => write!(f, "RvSubRI"),
+      OpCode::RvSubRI => write!(f, "RvSub_RI"),
       OpCode::MulRI => write!(f, "Mul_RI"),
       OpCode::DivRI => write!(f, "Div_RI"),
       OpCode::RvDivRI => write!(f, "RvDiv_RI"),
@@ -360,7 +361,7 @@ impl Display for OpCode {
       OpCode::SubRR => write!(f, "Sub_RR"),
       OpCode::MulRR => write!(f, "Mul_RR"),
       OpCode::DivRR => write!(f, "Div_RR"),
-      OpCode::PowRR => write!(f, "PowRR"),
+      OpCode::PowRR => write!(f, "Pow_RR"),
       OpCode::Call => write!(f, "Call"),
       OpCode::Jz => write!(f, "Jz"),
       OpCode::Jnz => write!(f, "Jnz"),
