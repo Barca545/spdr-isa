@@ -121,7 +121,7 @@ impl Display for Program {
           let b = src.next().unwrap();
           output.push_str(&format!("{} {}, ${}, ${}", op, fl, a, b),);
         }
-        OpCode::Not => {
+        OpCode::Not | OpCode::WriteStr => {
           let a = match src.next() {
             Some(a,) if a == 2 => "EQ",
             Some(a,) => &a.to_string(),
@@ -146,7 +146,7 @@ impl Display for Program {
         OpCode::RMem | OpCode::WMem => {
           let rd = src.next().unwrap();
           let r0 = src.next().unwrap();
-          let i_o = unsafe { transmute::<[u8; 4], f32,>(src.next_chunk::<4>().unwrap(),) };
+          let i_o = unsafe { transmute::<[u8; 4], u32,>(src.next_chunk::<4>().unwrap(),) };
           let r_o = src.next().unwrap();
           output.push_str(&format!("{} ${}, ${}, {}, ${}", op, rd, r0, i_o, r_o),);
         }
@@ -286,15 +286,17 @@ mod test {
     // Test Dealloc
     op_cmp([OpCode::Dealloc.into(), 14,], "Dealloc $14").unwrap();
     // Test RMem
-    op_cmp([OpCode::RMem.into(), 14, 15, 0, 0, 128, 63, 16,], "RMem $14, $15, 1, $16").unwrap();
+    op_cmp([OpCode::RMem.into(), 14, 15, 1, 0, 0, 0, 16,], "RMem $14, $15, 1, $16").unwrap();
     // Test WMem
-    op_cmp([OpCode::WMem.into(), 14, 15, 0, 0, 128, 63, 16,], "WMem $14, $15, 1, $16").unwrap();
+    op_cmp([OpCode::WMem.into(), 14, 15, 1, 0, 0, 0, 16,], "WMem $14, $15, 1, $16").unwrap();
     // Test Push
     op_cmp([OpCode::Push.into(), 14,], "Push $14").unwrap();
     // Test Pop
     op_cmp([OpCode::Pop.into(),], "Pop").unwrap();
     // Test PopR
     op_cmp([OpCode::PopR.into(), 14,], "PopR $14").unwrap();
+    // Test WriteStr
+    op_cmp([OpCode::WriteStr.into(), 15, 16,], "WriteStr $15, $16").unwrap();
     // Test Noop
     op_cmp([OpCode::Noop.into(),], "Noop").unwrap();
     // Test All
@@ -328,11 +330,12 @@ mod test {
         OpCode::Alloc.into(), 14, 15,
         OpCode::Realloc.into(), 14, 15,
         OpCode::Dealloc.into(), 14,
-        OpCode::RMem.into(), 14, 15, 0, 0, 128, 63, 16,
-        OpCode::WMem.into(), 14, 15, 0, 0, 128, 63, 16,
+        OpCode::RMem.into(), 14, 15, 1, 0, 0, 0, 16,
+        OpCode::WMem.into(), 14, 15, 1, 0, 0, 0, 16,
         OpCode::Push.into(), 14,
         OpCode::Pop.into(),
         OpCode::PopR.into(), 14,
+        OpCode::WriteStr.into(), 15, 16,
         OpCode::Noop.into(),
       ], "\
       Load $14, 1\n\
@@ -368,6 +371,7 @@ mod test {
       Push $14\n\
       Pop\n\
       PopR $14\n\
+      WriteStr $15, $16\n\
       Noop").unwrap();
   }
 

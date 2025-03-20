@@ -4,7 +4,6 @@ use std::fmt::Display;
 
 // Refactor:
 // - Should MemCpy also take offsets?
-// - How do I make the documentation about the Immediate size show up
 
 #[derive(FromPrimitive, ToPrimitive, Debug,)]
 /// Unless otherwise stated all immediate arguments are 4 bytes.
@@ -18,8 +17,8 @@ pub enum OpCode {
   /// Format: `LOAD Rd I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination register
-  /// - `I0`: Source immediate
+  /// - `Rd`: Destination register.
+  /// - `I0`: Source immediate.
   Load,
   /// # Copy Memory
   ///
@@ -28,8 +27,8 @@ pub enum OpCode {
   /// Format: COPY Rd R0
   ///
   /// Arguments:
-  /// - `Rd`: Destination register
-  /// - `R0`: Source register
+  /// - `Rd`: Destination register.
+  /// - `R0`: Source register.
   Copy,
   /// # Memory Copy
   ///
@@ -39,125 +38,125 @@ pub enum OpCode {
   /// Format:`MEMCPY Rd R0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination memory address
-  /// - `R0`: Source memory address
+  /// - `Rd`: Destination memory address.
+  /// - `R0`: Source memory address.
   MemCpy,
   /// # Add Register and Immediate
   ///
   /// Format: `ADD Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   AddRI,
   /// # Subtract Immediate from Register  
   ///
   /// Format: `SUB Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   SubRI,
   /// # Subtract Register from Immediate
   ///
   /// Format: `RVSUB Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   RvSubRI,
   /// # Multiply Register and Immediate
   ///
   /// Format: `MUL Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   MulRI,
   /// # Divide Register by Immediate
   ///
   /// Format: `DIV Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   DivRI,
   /// # Divide Immediate by Register
   ///
   /// Format: `RVDIV Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   RvDivRI,
   /// # Raise Register by Immediate
   ///
   /// Format: `POW Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   PowRI,
   /// # Raise Immediate by Register
   ///
   /// Format: `RVPOW Rd R0 I0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   RvPowRI,
   /// # Add Register and Register
   ///
   /// Format: `ADD Rd R0 R1`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `R1`: Register operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `R1`: Register operand.
   AddRR,
   /// # Subtract Register and Register
   ///
   /// Format: `SUB Rd R0 R2`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `R1`: Immediate operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `R1`: Immediate operand.
   SubRR,
   /// # Multiply Register and Register
   ///
   /// Format: `MUL Rd R0 R1`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `R1: Register operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `R1: Register operand.
   MulRR,
   /// # Divide Register and Register
   ///
   /// Format: `DIV Rd R0 R1`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Register operand
-  /// - `R1`: Register operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Register operand.
+  /// - `R1`: Register operand.
   DivRR,
   /// # Raise Register by Register
   ///
   /// Format: `POW Rd R0 R1`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: Memory operand
-  /// - `R1`: Register operand
+  /// - `Rd`: Destination.
+  /// - `R0`: Memory operand.
+  /// - `R1`: Register operand.
   PowRR,
   /// # Compare Register and Immediate
   /// Checks whether two values are equal and stores the result in
@@ -167,8 +166,8 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `Fl`: Flag indicating which comparison operation to perform.
-  /// - `R0`: Register operand
-  /// - `I0`: Immediate operand
+  /// - `R0`: Register operand.
+  /// - `I0`: Immediate operand.
   CmpRI,
   /// # Compare Register and Register
   /// Checks whether two values are equal and stores the result in
@@ -178,16 +177,16 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `Fl`: Flag indicating which comparison operation to perform.
-  /// - `R0`: Register operand
-  /// - `R1`: Register operand
+  /// - `R0`: Register operand.
+  /// - `R1`: Register operand.
   CmpRR,
   /// # Bitwise Not
   ///
   /// Format:`NOT Rd R0`
   ///
   /// Arguments:
-  /// - `Rd`: Destination
-  /// - `R0`: value being negated
+  /// - `Rd`: Destination.
+  /// - `R0`: value being negated.
   Not,
   /// # Unconditional Jump
   ///
@@ -201,44 +200,44 @@ pub enum OpCode {
   /// Format: `JZ R0 IDX`
   ///
   /// Arguments:
-  /// - `R0`: Register holding the check
-  /// - `Idx`: Destination program index as a `u32`
+  /// - `R0`: Register holding the check.
+  /// - `Idx`: Destination program index as a `u32`.
   Jz,
   /// # Jump if Not Zero
   ///
   /// Format: `JNZ R0 IDX`
   ///
   /// Arguments:
-  /// - `R0`: Register holding the check
-  /// - `Idx`: Destination program index as a `u32`
+  /// - `R0`: Register holding the check.
+  /// - `Idx`: Destination program index as a `u32`.
   Jnz,
   /// # Call a Function
   ///
   /// Format: `CALL IDX`
   ///
   /// Arguments:
-  /// - `IDX`: Location of the function pointer as a `u8`
+  /// - `Idx`: Location of the function pointer as a `u8`.
   Call,
   /// # System call
   ///
   /// Call an external function.
   ///
-  /// Format: `SYSCALL I0`
+  /// Format: `SYSCALL Idx`
   ///
   /// Arguments:
-  /// - `I0`: Index of the external function being called as a `u8`
+  /// - `Idx`: Index of the external function being called as a `u8`.
   SysCall,
   /// # Return from a function call
   ///
   /// Pop the return address of the top of the stack and set the PC equal to it.
   /// Pop the function's arguments from the stack.
   ///
-  /// Format: `RET I0`
+  /// Format: `RET Idx`
   ///
   /// Arguments:
-  /// - `I0`: The number of function arguments to clean up as a u8
+  /// - `Idx`: The number of function arguments to clean up as a u8.
   // Ret takes a u8 because the stack is only 20 cells long so it will never fill up even a u8 let alone a
-  // u32
+  // u32.
   Ret,
   /// # Allocate Memory
   ///
@@ -248,8 +247,8 @@ pub enum OpCode {
   /// Format: `ALLOC Rd R0`
   ///
   /// Arguments:
-  /// - `Rd`: Register storing the destination
-  /// - `R0`: Register storing the number of values to store
+  /// - `Rd`: Register storing the destination.
+  /// - `R0`: Register storing the number of values to store.
   Alloc,
   /// # Reallocate Memory
   ///
@@ -258,8 +257,8 @@ pub enum OpCode {
   /// Format: `REALLOC Rd R0`
   ///
   /// Arguments:
-  /// - `Rd`: Register storing the previous allocation
-  /// - `R0`: Register storing the number of values to store
+  /// - `Rd`: Register storing the previous allocation.
+  /// - `R0`: Register storing the number of values to store.
   Realloc,
   /// # Deallocate Memory
   ///
@@ -278,9 +277,9 @@ pub enum OpCode {
   ///
   /// Arguments:
   /// - `Rd`: Destination
-  /// - `R0`: Register storing the source memory address
-  /// - `I0`: Offset stored as an immediate
-  /// - `R1`: Offset stored in a register
+  /// - `R0`: Register storing the source memory address.
+  /// - `I0`: Offset stored as an immediate as a u32.
+  /// - `R1`: Offset stored in a register.
   ///
   /// Note: If there is no register offset, R2 will be zero and ignored. Zero
   /// (REQ) is used because it will never store an offset.
@@ -293,14 +292,25 @@ pub enum OpCode {
   /// Format:`RMEM Rd R0 I0 R1`
   ///
   /// Arguments:
-  /// - `Rd`: Register storing the destination memory address
-  /// - `R0`: Register storing the data to write to memory
-  /// - `I0`: Offset stored as an immediate
-  /// - `R1`: Offset stored in a register
+  /// - `Rd`: Register storing the destination memory address.
+  /// - `R0`: Register storing the data to write to memory.
+  /// - `I0`: Offset stored as an immediate as a u32.
+  /// - `R1`: Offset stored in a register.
   ///
   /// Note: If there is no register offset, R1 will be zero and ignored. R1 == 0
   /// (the PC register) is used because it will never store an offset.
   WMem,
+  /// # Read String
+  ///
+  /// Given a pointer and a len prints a string into the VM's `stdout` (usually
+  /// the terminal).
+  ///
+  /// Format: `READSTR R0 R1`
+  ///
+  /// Arguments:
+  /// - `R0`: Register storing the pointer to the string's start.
+  /// - `R1`: Register storing the string's length.
+  WriteStr,
   /// # Push to Stack
   ///
   /// Pushes the argument onto the top of stack.
@@ -308,7 +318,7 @@ pub enum OpCode {
   /// Format: `PUSH R0`
   ///
   /// Arguments:
-  /// - `R0`: Register holding the value to push
+  /// - `R0`: Register holding the value to push.
   Push,
   /// # Pop From Stack
   ///
@@ -323,7 +333,7 @@ pub enum OpCode {
   /// Format: `POPR R0`
   ///
   /// Arguments:
-  /// `R0`: The register to place the popped value
+  /// `R0`: The register to place the popped value.
   PopR,
   /// # No Operation
   Noop,
@@ -382,6 +392,7 @@ impl Display for OpCode {
       OpCode::Pop => write!(f, "Pop"),
       OpCode::PopR => write!(f, "PopR"),
       OpCode::Noop => write!(f, "Noop"),
+      OpCode::WriteStr => write!(f, "WriteStr"),
     }
   }
 }
